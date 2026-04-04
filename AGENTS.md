@@ -10,7 +10,7 @@ iAvro-Swift is a macOS Input Method Kit (IMK) application providing Bengali phon
 xcodebuild -project iAvro-Swift.xcodeproj -scheme "iAvro-Swift" -configuration Debug build
 ```
 
-The built app is at `~/Library/Developer/Xcode/DerivedData/iAvro-Swift-*/Build/Products/Debug/iAvro-Swift.app`.
+The built app is at `~/Library/Developer/Xcode/DerivedData/iAvro-Swift-*/Build/Products/Debug/Avro Keyboard.app`.
 
 To install as an input method, copy the `.app` bundle to `/Library/Input Methods/` and log out/in.
 
