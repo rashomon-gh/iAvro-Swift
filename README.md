@@ -7,7 +7,17 @@ A Swift rewrite of [iAvro](https://github.com/torifat/iAvro).
 - macOS 15.3+
 - Xcode 16+
 
-## Build
+## Installation
+
+Download the zip file from the Release section, then:
+1. Unzip and copy the `Avro Keyboard.app` to `~/Library/Input Methods/`
+2. Go to **System Settings → Keyboard → Input Sources → Edit → +** and add **Avro Keyboard** from the Bengali section
+
+
+
+## Local Development
+
+### Build
 
 ```bash
 xcodebuild -project iAvro-Swift.xcodeproj -scheme "iAvro-Swift" -configuration Debug build
@@ -15,15 +25,12 @@ xcodebuild -project iAvro-Swift.xcodeproj -scheme "iAvro-Swift" -configuration D
 
 Or open `iAvro-Swift.xcodeproj` in Xcode and press Cmd+B.
 
-## Install as Input Method
+### Install as Input Method
 
 1. Build the project
-2. Copy the built `iAvro-Swift.app` to `/Library/Input Methods/`:
-   ```bash
-   sudo cp -R ~/Library/Developer/Xcode/DerivedData/iAvro-Swift-*/Build/Products/Debug/iAvro-Swift.app /Library/Input\ Methods/
-   ```
-3. Log out and log back in
-4. Go to **System Settings → Keyboard → Input Sources → Edit → +** and add **iAvro-Swift** from the Bengali section
+2. Copy the build binary from `~/Library/Developer/Xcode/DerivedData/`. 
+Apparently Xcode stores binaries with a hash for each build.
+3. Go to **System Settings → Keyboard → Input Sources → Edit → +** and add **Avro Keyboard** from the Bengali section
 
 
 
@@ -52,7 +59,3 @@ iAvro-Swift/
 ├── preferences.plist             # Default preferences
 └── Assets.xcassets/              # App & menu icons
 ```
-
-## License
-
-Same as original iAvro project.
