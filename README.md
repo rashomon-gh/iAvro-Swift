@@ -1,6 +1,6 @@
 # iAvro-Swift
 
-A Swift rewrite of [iAvro](https://github.com/shawon1false/iAvro-Swift) — a macOS Input Method Kit (IMK) application providing Bengali phonetic typing via Avro Phonetic.
+A Swift rewrite of [iAvro](https://github.com/torifat/iAvro).
 
 ## Requirements
 
@@ -25,14 +25,7 @@ Or open `iAvro-Swift.xcodeproj` in Xcode and press Cmd+B.
 3. Log out and log back in
 4. Go to **System Settings → Keyboard → Input Sources → Edit → +** and add **iAvro-Swift** from the Bengali section
 
-## Features
 
-- Bengali phonetic typing using Avro Phonetic layout
-- Dictionary suggestions with Levenshtein distance sorting
-- Autocorrect support
-- Suffix-aware suggestion engine
-- Configurable candidate panel (vertical/horizontal)
-- Preferences window (General + About tabs)
 
 ## Project Structure
 
