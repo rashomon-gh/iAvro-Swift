@@ -21,7 +21,7 @@ jobs:
 
       - name: Package
         run: |
-          APP_PATH="build/Build/Products/Release/Avro Keyboard.app"
+          APP_PATH="build/Build/Products/Release/iAvro-Swift.app"
           STAGING="iAvro-Swift-Release"
           mkdir -p "$STAGING"
           cp -R "$APP_PATH" "$STAGING/"
