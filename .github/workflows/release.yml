@@ -21,14 +21,14 @@ jobs:
 
       - name: Package
         run: |
-          APP_PATH="build/Build/Products/Release/iAvro-Swift.app"
-          STAGING="iAvro-Swift-Release"
+          APP_PATH="build/Build/Products/Release/Avro Keyboard.app"
+          STAGING="Avro-Keyboard-Release"
           mkdir -p "$STAGING"
           cp -R "$APP_PATH" "$STAGING/"
           cp install.scpt "$STAGING/"
-          zip -r "iAvro-Swift-${GITHUB_REF_NAME}.zip" "$STAGING"
+          zip -r "Avro-Keyboard-${GITHUB_REF_NAME}.zip" "$STAGING"
 
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          files: iAvro-Swift-${{ github.ref_name }}.zip
+          files: Avro-Keyboard-${{ github.ref_name }}.zip

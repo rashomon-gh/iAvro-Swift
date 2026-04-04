@@ -3,7 +3,7 @@
 use AppleScript version "2.5"
 use scripting additions
 
-set appName to "iAvro-Swift.app"
+set appName to "Avro Keyboard.app"
 set sourcePath to POSIX path of (path to me as text) & appName
 set destDir to POSIX path of (path to home folder) & "Library/Input Methods/"
 set destPath to destDir & appName
@@ -14,7 +14,7 @@ tell application "Finder"
 	end if
 end tell
 
-display dialog "Copy " & appName & " to ~/Library/Input Methods/?" buttons {"Cancel", "Copy"} default button "Copy" with title "Install iAvro-Swift" with icon note
+display dialog "Copy " & appName & " to ~/Library/Input Methods/?" buttons {"Cancel", "Copy"} default button "Copy" with title "Install Avro Keyboard" with icon note
 
 if button returned of result is "Copy" then
 	do shell script "cp -R " & quoted form of sourcePath & " " & quoted form of destPath with administrator privileges
