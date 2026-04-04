@@ -1,9 +1,6 @@
 # iAvro-Swift
 
-| Build | Release |
-|-------|---------|
-| [![Build](https://github.com/rashomon-gh/iAvro-Swift/actions/workflows/build.yml/badge.svg)](https://github.com/rashomon-gh/iAvro-Swift/actions/workflows/build.yml) | [![Release](https://github.com/rashomon-gh/iAvro-Swift/actions/workflows/release.yml/badge.svg)](https://github.com/rashomon-gh/iAvro-Swift/actions/workflows/release.yml) |
-
+[![Build](https://github.com/rashomon-gh/iAvro-Swift/actions/workflows/build.yml/badge.svg)](https://github.com/rashomon-gh/iAvro-Swift/actions/workflows/build.yml)
 
 A Swift rewrite of [iAvro](https://github.com/torifat/iAvro).
 
