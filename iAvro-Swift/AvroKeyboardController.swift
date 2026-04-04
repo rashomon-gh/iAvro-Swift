@@ -158,7 +158,7 @@ class AvroKeyboardController: IMKInputController {
                     CacheManager.shared.setString(selected, forKey: term)
 
                     // Also update the base word selection for suffix combinations
-                    if let tmpArray = CacheManager.shared.base(forKey: candidateString.string) as? [Any],
+                    if let tmpArray = CacheManager.shared.base(forKey: candidateString.string),
                        tmpArray.count >= 2,
                        let base = tmpArray[0] as? String,
                        let item = tmpArray[1] as? String {
