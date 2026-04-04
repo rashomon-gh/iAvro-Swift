@@ -1,5 +1,11 @@
 import Foundation
 
+/// Generates a regex pattern string from Romanized input for dictionary lookups.
+///
+/// Works similarly to `AvroParser` but instead of producing Bengali text, it produces
+/// a regular expression pattern that can match Bengali words in the dictionary database.
+/// Each replacement is followed by a suffix-capturing group `(্[যবম])?(্?)([ঃঁ]?)`
+/// to handle conjunct consonants and diacritical marks.
 class RegexParser {
     static let shared = RegexParser()
 
@@ -25,6 +31,10 @@ class RegexParser {
         }
     }
 
+    /// Parses a Romanized string and returns a regex pattern for dictionary matching.
+    ///
+    /// - Parameter string: The Romanized input text.
+    /// - Returns: A regex pattern string suitable for matching Bengali dictionary entries.
     func parse(_ string: String) -> String {
         guard !string.isEmpty else { return string }
 
@@ -151,6 +161,7 @@ class RegexParser {
         return output
     }
 
+    /// Lowercases the input and strips case-sensitive characters (they are not included in output).
     private func clean(_ string: String) -> String {
         var result = ""
         for c in string {

@@ -1,6 +1,9 @@
 import SwiftUI
 
+/// A window controller that hosts the SwiftUI-based preferences interface.
 class PreferencesWindowController: NSWindowController {
+
+    /// Creates a titled, closable window containing the preferences SwiftUI view.
     convenience init() {
         let hostingView = NSHostingView(rootView: PreferencesView())
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 500, height: 400),
@@ -14,6 +17,9 @@ class PreferencesWindowController: NSWindowController {
     }
 }
 
+// MARK: - SwiftUI Views
+
+/// The root preferences view with General and About tabs.
 struct PreferencesView: View {
     @AppStorage("IncludeDictionary") var includeDictionary = true
     @AppStorage("CommitNewLineOnEnter") var commitNewLineOnEnter = false
@@ -32,6 +38,7 @@ struct PreferencesView: View {
     }
 }
 
+/// The General preferences tab with toggles and a picker for candidate panel style.
 struct GeneralPreferencesView: View {
     @AppStorage("IncludeDictionary") var includeDictionary = true
     @AppStorage("CommitNewLineOnEnter") var commitNewLineOnEnter = false
@@ -51,6 +58,7 @@ struct GeneralPreferencesView: View {
     }
 }
 
+/// The About tab showing application name and credits.
 struct AboutView: View {
     var body: some View {
         VStack(spacing: 16) {

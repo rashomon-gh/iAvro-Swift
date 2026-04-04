@@ -1,10 +1,18 @@
 import Foundation
 import SQLite3
 
+/// Loads and queries the Bengali dictionary stored in `database.db3`.
+///
+/// The database contains ~47 tables named after Bengali consonant transliterations
+/// (e.g. "A", "B", "K", "KH") plus a "Suffix" table for suffix mapping.
+/// Each word table has a single column containing Bengali words.
 class Database {
     static let shared = Database()
 
+    /// Maps lowercase table names to their loaded word lists.
     private var db: [String: [String]] = [:]
+
+    /// Maps English suffix strings to their Bengali equivalents.
     private var suffixMap: [String: String] = [:]
 
     private init() {
@@ -32,6 +40,12 @@ class Database {
         loadSuffixTable(from: db)
     }
 
+    /// Loads all words from a single database table.
+    ///
+    /// - Parameters:
+    ///   - name: The table name (e.g. "K", "TTH").
+    ///   - dbPtr: An open SQLite database pointer.
+    /// - Returns: An array of Bengali word strings from the table.
     private func loadTable(name: String, from dbPtr: OpaquePointer) -> [String] {
         var items: [String] = []
         let query = "SELECT * FROM \(name)"
@@ -50,6 +64,7 @@ class Database {
         return items
     }
 
+    /// Loads the Suffix table, mapping English suffix strings to Bengali suffixes.
     private func loadSuffixTable(from dbPtr: OpaquePointer) {
         var statement: OpaquePointer?
         let query = "SELECT * FROM Suffix"
@@ -67,6 +82,13 @@ class Database {
         sqlite3_finalize(statement)
     }
 
+    /// Searches the dictionary for words matching the given Romanized term.
+    ///
+    /// Generates a regex from the input using `RegexParser`, then searches only the
+    /// tables relevant to the input's first character (phonetic mapping).
+    ///
+    /// - Parameter term: The Romanized input string.
+    /// - Returns: An array of matching Bengali words (deduplicated).
     func find(_ term: String) -> [String] {
         let lower = term.lowercased()
         guard let firstChar = lower.first else { return [] }
@@ -75,6 +97,7 @@ class Database {
         let regexStr = "^" + RegexParser.shared.parse(term) + "$"
         var tableList: [String] = []
 
+        // Map the first English letter to relevant Bengali transliteration tables
         switch lmc {
         case "a": tableList = ["a", "aa", "e", "oi", "o", "nya", "y"]
         case "b": tableList = ["b", "bh"]
@@ -124,6 +147,10 @@ class Database {
         return Array(suggestions)
     }
 
+    /// Returns the Bengali equivalent of an English suffix string.
+    ///
+    /// - Parameter suffixStr: The English suffix (e.g. "er", "ing").
+    /// - Returns: The Bengali suffix string, or `nil` if not found.
     func banglaForSuffix(_ suffixStr: String) -> String? {
         return suffixMap[suffixStr.lowercased()]
     }
