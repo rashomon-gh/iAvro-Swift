@@ -18,6 +18,12 @@ brew tap rashomon-gh/tap
 brew install --cask avro-keyboard
 ```
 
+> [!NOTE]
+> **Note on macOS Gatekeeper:** Since the app is not signed with an Apple Developer certificate, macOS may block it on first launch. To bypass this, 
+> first switch your input method (default shortcut on macOS is `ctrl + space`, or you can click on the input method on your menubar if you've set it up that way.)
+> You'll get an warning prompt. Click on `Done`, and then open `Settings -> Privacy & Security`, scroll down and click on `Open Anyway`. You only have to do it the first time.
+
+
 ### Manual
 
 Download the zip file from the [releases section](https://github.com/rashomon-gh/iAvro-Swift/releases/). Then unzip it and run the `install.scpt` script. It'll ask for your permission to set up Avro Keyboard as an input method for you. Give the permission and it'll do the rest.
