@@ -8,10 +8,7 @@ A Swift rewrite of [iAvro](https://github.com/torifat/iAvro).
 - Xcode 16+
 
 ## Installation
-
-Download the zip file from the Release section, then:
-1. Unzip and copy the `Avro Keyboard.app` to `~/Library/Input Methods/`
-2. Go to **System Settings → Keyboard → Input Sources → Edit → +** and add **Avro Keyboard** from the Bengali section
+Download the zip file from the [releases section](https://github.com/rashomon-gh/iAvro-Swift/releases/). Then unzip it and run the `install.scpt` script. It'll ask for your permission to set up Avro Keyboard as an input method for you. Give the permission and it'll do the rest.
 
 
 
@@ -30,7 +27,7 @@ Or open `iAvro-Swift.xcodeproj` in Xcode and press Cmd+B.
 1. Build the project
 2. Copy the build binary from `~/Library/Developer/Xcode/DerivedData/`. 
 Apparently Xcode stores binaries with a hash for each build.
-3. Go to **System Settings → Keyboard → Input Sources → Edit → +** and add **Avro Keyboard** from the Bengali section
+3. Go to **System Settings → Keyboard → Input Sources → Edit → +** and add **Avro Keyboard** or **iAvro-Swift** (depending on the build scheme) from the Bengali section.
 
 
 
