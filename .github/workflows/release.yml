@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - '*'
 
 jobs:
   release:
@@ -21,7 +21,7 @@ jobs:
 
       - name: Package
         run: |
-          APP_PATH="build/Build/Products/Release/iAvro-Swift.app"
+          APP_PATH="build/Build/Products/Release/Avro Keyboard.app"
           STAGING="iAvro-Swift-Release"
           mkdir -p "$STAGING"
           cp -R "$APP_PATH" "$STAGING/"
