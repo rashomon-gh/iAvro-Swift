@@ -25,6 +25,7 @@ brew install --cask avro-keyboard
 Download the zip file from the [releases section](https://github.com/rashomon-gh/iAvro-Swift/releases/). Then unzip it and run the `install.scpt` script. It'll ask for your permission to set up Avro Keyboard as an input method for you. Give the permission and it'll do the rest.
 
 After installing via either method, add Avro Keyboard from:
+
 **System Settings → Keyboard → Input Sources → Edit → +**
 
 ## Local Development
