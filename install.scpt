@@ -18,5 +18,5 @@ display dialog "Copy " & appName & " to ~/Library/Input Methods/?" buttons {"Can
 
 if button returned of result is "Copy" then
 	do shell script "cp -R " & quoted form of sourcePath & " " & quoted form of destPath with administrator privileges
-	display dialog "iAvro-Swift has been installed." & return & return & "Add it from System Settings → Keyboard → Input Sources." buttons {"OK"} default button "OK" with title "Installation Complete" with icon note
+	display dialog "Avro Keyboard has been installed." & return & return & "Add it from System Settings → Keyboard → Input Sources." buttons {"OK"} default button "OK" with title "Installation Complete" with icon note
 end if
