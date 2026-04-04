@@ -3,7 +3,7 @@
 use AppleScript version "2.5"
 use scripting additions
 
-set appName to "iAvro-Swift.app"
+set appName to "Avro Keyboard.app"
 set sourcePath to POSIX path of (path to me as text) & appName
 set destDir to POSIX path of (path to home folder) & "Library/Input Methods/"
 set destPath to destDir & appName
