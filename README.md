@@ -17,6 +17,7 @@ A Swift rewrite of [iAvro](https://github.com/torifat/iAvro).
 ### Homebrew (recommended)
 
 ```bash
+brew tap rashomon-gh/tap
 brew install --cask avro-keyboard
 ```
 
