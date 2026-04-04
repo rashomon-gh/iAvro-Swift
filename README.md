@@ -44,7 +44,7 @@ Or open `iAvro-Swift.xcodeproj` in Xcode and press Cmd+B.
 1. Build the project
 2. Copy the build binary from `~/Library/Developer/Xcode/DerivedData/`. 
 Apparently Xcode stores binaries with a hash for each build.
-3. Go to **System Settings → Keyboard → Input Sources → Edit → +** and add **Avro Keyboard** from the Bengali section.
+3. Go to **System Settings → Keyboard → Input Sources → Edit → +** and add **Avro Keyboard** from the Bangla section.
 
 
 
