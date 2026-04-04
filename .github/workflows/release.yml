@@ -1,0 +1,34 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: |
+          xcodebuild -project iAvro-Swift.xcodeproj \
+            -scheme "iAvro-Swift" \
+            -configuration Release \
+            -derivedDataPath build \
+            clean build
+
+      - name: Package
+        run: |
+          APP_PATH="build/Build/Products/Release/Avro Keyboard.app"
+          STAGING="Avro-Keyboard-Release"
+          mkdir -p "$STAGING"
+          cp -R "$APP_PATH" "$STAGING/"
+          cp install.scpt "$STAGING/"
+          zip -r "Avro-Keyboard-${GITHUB_REF_NAME}.zip" "$STAGING"
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: Avro-Keyboard-${{ github.ref_name }}.zip
