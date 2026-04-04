@@ -10,10 +10,10 @@ import Foundation
 class CacheManager {
     static let shared = CacheManager()
 
-    /// Persisted weight selections (input → selected Bengali word).
+    /// Persisted weight selections (input → selected Bangla word).
     private var weightCache: NSMutableDictionary = [:]
 
-    /// Cached phonetic suggestion lists (input → array of Bengali candidates).
+    /// Cached phonetic suggestion lists (input → array of Bangla candidates).
     private var phoneticCache: NSMutableDictionary = [:]
 
     /// Tracks base word + suffix mappings for the current suggestion session.
@@ -46,18 +46,18 @@ class CacheManager {
         weightCache.write(toFile: weightPath, atomically: true)
     }
 
-    /// Retrieves a previously selected Bengali word for the given input term.
+    /// Retrieves a previously selected Bangla word for the given input term.
     ///
     /// - Parameter key: The Romanized input term.
-    /// - Returns: The selected Bengali word, or `nil` if none was cached.
+    /// - Returns: The selected Bangla word, or `nil` if none was cached.
     func string(forKey key: String) -> String? {
         return weightCache.object(forKey: key) as? String
     }
 
-    /// Records the user's selected Bengali word for the given input term.
+    /// Records the user's selected Bangla word for the given input term.
     ///
     /// - Parameters:
-    ///   - string: The Bengali word the user selected.
+    ///   - string: The Bangla word the user selected.
     ///   - key: The Romanized input term.
     func setString(_ string: String, forKey key: String) {
         weightCache.setObject(string, forKey: key as NSString)
@@ -92,7 +92,7 @@ class CacheManager {
 
     /// Retrieves the base word information for a suffix-combined suggestion.
     ///
-    /// - Parameter key: The suffix-combined Bengali word.
+    /// - Parameter key: The suffix-combined Bangla word.
     /// - Returns: An array containing `[baseTerm, baseWord]`, or `nil` if not tracked.
     func base(forKey key: String) -> [Any]? {
         return recentBaseCache.object(forKey: key) as? [Any]
@@ -102,7 +102,7 @@ class CacheManager {
     ///
     /// - Parameters:
     ///   - base: An array containing `[baseTerm, baseWord]`.
-    ///   - key: The suffix-combined Bengali word.
+    ///   - key: The suffix-combined Bangla word.
     func setBase(_ base: [Any], forKey key: String) {
         recentBaseCache.setObject(base as NSArray, forKey: key as NSString)
     }

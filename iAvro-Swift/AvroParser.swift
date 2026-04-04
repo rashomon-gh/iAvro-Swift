@@ -1,6 +1,6 @@
 import Foundation
 
-/// Converts Romanized (English) text into Bengali using phonetic patterns loaded from `data.json`.
+/// Converts Romanized (English) text into Bangla using phonetic patterns loaded from `data.json`.
 ///
 /// The parser uses a longest-match-first strategy with binary search over a sorted pattern table.
 /// Each pattern may have conditional rules that inspect surrounding characters (prefix/suffix)
@@ -33,14 +33,14 @@ class AvroParser {
         }
     }
 
-    /// Parses a Romanized string and returns the Bengali equivalent.
+    /// Parses a Romanized string and returns the Bangla equivalent.
     ///
     /// Iterates through the input character by character, attempting to match the longest
     /// possible pattern at each position using binary search. When a pattern match is found,
     /// its conditional rules are evaluated to determine the correct replacement.
     ///
     /// - Parameter string: The Romanized input text (e.g. "ami").
-    /// - Returns: The Bengali output string (e.g. "আমি").
+    /// - Returns: The Bangla output string (e.g. "আমি").
     func parse(_ string: String) -> String {
         guard !string.isEmpty else { return "" }
 
@@ -203,7 +203,7 @@ class AvroParser {
         return str.contains(lower)
     }
 
-    /// Returns whether the character is a Bengali or English vowel.
+    /// Returns whether the character is a Bangla or English vowel.
     func isVowel(_ c: Character) -> Bool {
         return inString(vowel, c: c)
     }

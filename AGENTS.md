@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-iAvro-Swift is a macOS Input Method Kit (IMK) application providing Bengali phonetic typing via Avro Phonetic. It is a Swift rewrite of the original Objective-C iAvro project (located in `iAvro/` directory, reference only — do not modify).
+iAvro-Swift is a macOS Input Method Kit (IMK) application providing Bangla phonetic typing via Avro Phonetic. It is a Swift rewrite of the original Objective-C iAvro project (located in `iAvro/` directory, reference only — do not modify).
 
 ## Build & Run
 
@@ -26,9 +26,9 @@ To install as an input method, copy the `.app` bundle to `/Library/Input Methods
 | File | Purpose |
 |---|---|
 | `main.swift` | Entry point: creates `IMKServer`, loads singletons |
-| `AvroParser.swift` | Converts Romanized text to Bengali using `data.json` patterns (binary search) |
+| `AvroParser.swift` | Converts Romanized text to Bangla using `data.json` patterns (binary search) |
 | `RegexParser.swift` | Generates regex patterns from `regex.json` for dictionary lookups |
-| `Database.swift` | Loads Bengali dictionary from `database.db3` (SQLite3 C API) |
+| `Database.swift` | Loads Bangla dictionary from `database.db3` (SQLite3 C API) |
 | `Suggestion.swift` | Combines phonetic parse + dictionary + autocorrect + suffix handling |
 | `AutoCorrect.swift` | Loads autocorrect entries from `autodict.plist` |
 | `CacheManager.swift` | Caches suggestions to `~/Library/Application Support/OmicronLab/Avro Keyboard/weight.plist` |
@@ -44,8 +44,8 @@ To install as an input method, copy the `.app` bundle to `/Library/Input Methods
 
 - `data.json` — phonetic conversion patterns
 - `regex.json` — regex generation patterns
-- `database.db3` — SQLite Bengali dictionary (~47 tables + Suffix table)
-- `autodict.plist` — autocorrect dictionary (English→Bengali, ~1800+ entries)
+- `database.db3` — SQLite Bangla dictionary (~47 tables + Suffix table)
+- `autodict.plist` — autocorrect dictionary (English→Bangla, ~1800+ entries)
 - `preferences.plist` — default user preferences
 
 ## Key Patterns

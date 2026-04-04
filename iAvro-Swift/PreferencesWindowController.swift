@@ -65,7 +65,7 @@ struct AboutView: View {
             Text("iAvro")
                 .font(.title)
                 .fontWeight(.bold)
-            Text("Bengali Input Method for macOS")
+            Text("Bangla Input Method for macOS")
                 .foregroundStyle(.secondary)
             Text("Based on Avro Phonetic by OmicronLab")
                 .foregroundStyle(.secondary)

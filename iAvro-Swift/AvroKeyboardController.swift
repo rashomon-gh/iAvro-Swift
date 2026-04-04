@@ -5,7 +5,7 @@ import InputMethodKit
 ///
 /// Registered with IMK as `AvroKeyboardController` (via the `@objc` name and `Info.plist`).
 /// Receives key events from client applications, builds a composition buffer, generates
-/// Bengali suggestions, and manages the candidate panel.
+/// Bangla suggestions, and manages the candidate panel.
 @objc(AvroKeyboardController)
 class AvroKeyboardController: IMKInputController {
 
@@ -26,13 +26,13 @@ class AvroKeyboardController: IMKInputController {
     /// Index of the candidate that will be committed on space/enter.
     private var selectedCandidateIndex: Int = 0
 
-    /// Bengali prefix parsed from punctuation at the start of the buffer.
+    /// Bangla prefix parsed from punctuation at the start of the buffer.
     private var prefix: String = ""
 
     /// The core input term extracted from the composition buffer.
     private var term: String = ""
 
-    /// Bengali suffix parsed from punctuation at the end of the buffer.
+    /// Bangla suffix parsed from punctuation at the end of the buffer.
     private var suffix: String = ""
 
     /// Whether the user navigated candidates with arrow keys (triggers cache persist).
@@ -50,11 +50,11 @@ class AvroKeyboardController: IMKInputController {
     /// Parses the composition buffer into prefix/term/suffix and generates suggestions.
     ///
     /// Uses a regex to split the buffer into three parts:
-    /// - Group 1: Leading punctuation → converted to Bengali as `prefix`
+    /// - Group 1: Leading punctuation → converted to Bangla as `prefix`
     /// - Group 2: The core input term → used for suggestion lookup
-    /// - Group 3: Trailing punctuation → converted to Bengali as `suffix`
+    /// - Group 3: Trailing punctuation → converted to Bangla as `suffix`
     ///
-    /// Each candidate is assembled as `prefix + bengaliWord + suffix`.
+    /// Each candidate is assembled as `prefix + BanglaWord + suffix`.
     private func findCurrentCandidates() {
         currentCandidates = []
         if composedBuffer.isEmpty { return }
@@ -148,7 +148,7 @@ class AvroKeyboardController: IMKInputController {
             if !term.isEmpty {
                 let comp = candidateString.string == (currentCandidates[0] as? String ?? "")
                 if !(comp && prevSelected == -1) {
-                    // Extract just the Bengali word (strip prefix/suffix)
+                    // Extract just the Bangla word (strip prefix/suffix)
                     let prefixLen = prefix.count
                     let candidateLen = candidateString.length
                     let suffixLen = suffix.count

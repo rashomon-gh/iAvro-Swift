@@ -68,7 +68,7 @@ iAvro-Swift/
 ├── Info.plist                    # IMK configuration
 ├── data.json                     # Phonetic patterns
 ├── regex.json                    # Regex patterns
-├── database.db3                  # Bengali dictionary
+├── database.db3                  # Bangla dictionary
 ├── autodict.plist                # Autocorrect entries
 ├── preferences.plist             # Default preferences
 └── Assets.xcassets/              # App & menu icons
