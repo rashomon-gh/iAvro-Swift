@@ -8,11 +8,19 @@ A Swift rewrite of [iAvro](https://github.com/torifat/iAvro).
 - Xcode 16+
 
 ## Installation
+
+### Homebrew (recommended)
+
+```bash
+brew install --cask avro-keyboard
+```
+
+### Manual
+
 Download the zip file from the [releases section](https://github.com/rashomon-gh/iAvro-Swift/releases/). Then unzip it and run the `install.scpt` script. It'll ask for your permission to set up Avro Keyboard as an input method for you. Give the permission and it'll do the rest.
 
-
-
-## Local Development
+After installing via either method, add Avro Keyboard from:
+**System Settings → Keyboard → Input Sources → Edit → +**## Local Development
 
 ### Build
 
