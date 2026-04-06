@@ -9,7 +9,7 @@ A Swift rewrite of [iAvro](https://github.com/torifat/iAvro).
 ## Requirements
 
 - macOS 15.3+
-- Xcode 16+
+- Xcode 16+ (for local development)
 
 ## Installation
 
