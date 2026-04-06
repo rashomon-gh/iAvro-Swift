@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-iAvro-Swift is a macOS Input Method Kit (IMK) application providing Bangla phonetic typing via Avro Phonetic. It is a Swift rewrite of the original Objective-C iAvro project (located in `iAvro/` directory, reference only — do not modify).
+iAvro-Swift is a macOS Input Method Kit (IMK) application providing Bangla phonetic typing via Avro Phonetic. 
 
 ## Build & Run
 
