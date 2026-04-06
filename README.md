@@ -25,12 +25,6 @@ After installing, add Avro Keyboard from:
 **System Settings → Keyboard → Input Sources → Edit → +** and add **Avro Keyboard** from the Bangla section.
 
 
-> [!NOTE]
-> **Note on macOS Gatekeeper:** Since the app is not signed with an Apple Developer certificate, macOS may block it on first launch. To bypass this, 
-> first switch your input method (default shortcut on macOS is `ctrl + space`, or you can click on the input method on your menubar if you've set it up that way.)
-> You'll get an warning prompt. Click on `Done`, and then open `Settings -> Privacy & Security`, scroll down and click on `Open Anyway`. You only have to do it the first time.
-
-
 ## Local Development
 
 ### Build
