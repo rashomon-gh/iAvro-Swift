@@ -10,22 +10,9 @@
 		03DDA69E2F80E8370068A3C8 /* Avro Keyboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Avro Keyboard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		03785CAB2F81D75500CA891A /* Exceptions for "iAvro-Swift" folder in "iAvro-Swift" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 03DDA69D2F80E8370068A3C8 /* iAvro-Swift */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		03DDA6A02F80E8370068A3C8 /* iAvro-Swift */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				03785CAB2F81D75500CA891A /* Exceptions for "iAvro-Swift" folder in "iAvro-Swift" target */,
-			);
 			path = "iAvro-Swift";
 			sourceTree = "<group>";
 		};
