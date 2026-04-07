@@ -2,10 +2,11 @@ import AppKit
 
 /// Registers default user preferences from `preferences.plist` and manages the preferences window.
 ///
-/// Loaded at startup from `main.swift`. The defaults include:
+/// Loaded at startup from main.m. The defaults include:
 /// - `CandidatePanelType`: The candidate panel display style (1 = vertical, 2 = horizontal).
 /// - `CommitNewLineOnEnter`: Whether pressing Enter commits a newline.
 /// - `IncludeDictionary`: Whether dictionary suggestions are enabled.
+@objc(IMPreferences)
 class IMPreferences: NSObject {
 
     /// The window controller for the preferences window (lazy-loaded).
@@ -28,7 +29,7 @@ class IMPreferences: NSObject {
     /// The window controller for the preferences window.
     ///
     /// Creates a `PreferencesWindowController` on first access.
-    var windowController: NSWindowController {
+    @objc var windowController: NSWindowController {
         if _windowController == nil {
             _windowController = PreferencesWindowController()
         }

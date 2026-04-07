@@ -40,7 +40,7 @@ class AvroKeyboardController: IMKInputController {
 
     // MARK: - Initialization
 
-    override init!(server: IMKServer!, delegate: Any!, client inputClient: Any!) {
+    @objc public override init!(server: IMKServer!, delegate: Any!, client inputClient: Any!) {
         super.init(server: server, delegate: delegate, client: inputClient)
         currentClient = inputClient as AnyObject?
     }

@@ -24,6 +24,8 @@
 	<string>AvroKeyboardController</string>
 	<key>LSBackgroundOnly</key>
 	<string>1</string>
+	<key>NSMainNibFile</key>
+	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>NSSupportsSuddenTermination</key>
@@ -35,6 +37,6 @@
 		<string>Beng</string>
 	</array>
 	<key>tsInputMethodIconFileKey</key>
-	<string>MenuIcon</string>
+	<string>AppIcon</string>
 </dict>
 </plist>

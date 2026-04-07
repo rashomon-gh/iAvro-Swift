@@ -8,34 +8,44 @@ import InputMethodKit
 @objc(MainMenuAppDelegate)
 class MainMenuAppDelegate: NSObject, NSApplicationDelegate {
 
-    /// The preferences manager instance, set at startup from `main.swift`.
+    /// The preferences manager instance.
     @objc var imPref: IMPreferences?
 
     /// The status bar menu shown when the input method icon is clicked.
     @objc let menu = NSMenu()
 
-    /// Creates and configures the menu with a Preferences item.
+    /// Sets up the application menu programmatically (no NIB file).
     @objc func setupMenu() {
-        let preferencesItem = NSMenuItem(title: "Preferences...", action: #selector(showPreferences(_:)), keyEquivalent: ",")
+        print("iAvro: Setting up menu...")
+
+        // Create Preferences menu item
+        let preferencesItem = NSMenuItem()
+        preferencesItem.title = "Preferences..."
         preferencesItem.tag = 1
+        preferencesItem.action = #selector(showPreferences(_:))
+        preferencesItem.target = self
         menu.addItem(preferencesItem)
 
-        // Initialize dictionary and singletons if dictionary is enabled
-        initializeSingletons()
+        print("iAvro: ✅ Menu setup complete")
     }
 
-    /// Initializes dictionary-related singletons based on user preferences.
-    ///
-    /// This replicates the awakeFromNib() behavior from the Objective-C version,
-    /// loading Database, RegexParser, CacheManager, and AutoCorrect singletons.
-    private func initializeSingletons() {
+    /// Called when the NIB is loaded. Wires up menu actions and eagerly loads
+    /// dictionary data and singletons if dictionary suggestions are enabled.
+    @objc override func awakeFromNib() {
+        print("iAvro: awakeFromNib called")
+
+        let preferencesItem = menu.item(withTag: 1)
+        preferencesItem?.action = #selector(showPreferences(_:))
+
         if UserDefaults.standard.bool(forKey: "IncludeDictionary") {
-            print("Loading Dictionary...")
+            print("iAvro: Loading Dictionary...")
             let _ = Database.shared
             let _ = RegexParser.shared
             let _ = CacheManager.shared
         }
         let _ = AutoCorrect.shared
+
+        print("iAvro: ✅ Awake from nib complete")
     }
 
     /// Opens the preferences window.
