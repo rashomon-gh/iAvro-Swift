@@ -44,4 +44,16 @@ class Candidates: IMKCandidates {
             setupSharedInstance(with: server)
         }
     }
+
+    // MARK: - IMKCandidates Method Bridges
+
+    /// Updates the candidate panel with the current candidate list.
+    @objc override func update() {
+        super.update()
+    }
+
+    /// Returns the current candidate panel type.
+    @objc override func panelType() -> IMKCandidatePanelType {
+        return super.panelType()
+    }
 }

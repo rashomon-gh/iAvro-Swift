@@ -19,6 +19,23 @@ class MainMenuAppDelegate: NSObject, NSApplicationDelegate {
         let preferencesItem = NSMenuItem(title: "Preferences...", action: #selector(showPreferences(_:)), keyEquivalent: ",")
         preferencesItem.tag = 1
         menu.addItem(preferencesItem)
+
+        // Initialize dictionary and singletons if dictionary is enabled
+        initializeSingletons()
+    }
+
+    /// Initializes dictionary-related singletons based on user preferences.
+    ///
+    /// This replicates the awakeFromNib() behavior from the Objective-C version,
+    /// loading Database, RegexParser, CacheManager, and AutoCorrect singletons.
+    private func initializeSingletons() {
+        if UserDefaults.standard.bool(forKey: "IncludeDictionary") {
+            print("Loading Dictionary...")
+            let _ = Database.shared
+            let _ = RegexParser.shared
+            let _ = CacheManager.shared
+        }
+        let _ = AutoCorrect.shared
     }
 
     /// Opens the preferences window.
@@ -31,24 +48,9 @@ class MainMenuAppDelegate: NSObject, NSApplicationDelegate {
     }
 
     /// Persists the suggestion cache to disk before the application terminates.
-    @objc func applicationWillTerminate(_ notification: Notification) {
+    func applicationWillTerminate(_ notification: Notification) {
         if UserDefaults.standard.bool(forKey: "IncludeDictionary") {
             CacheManager.shared.persist()
         }
-    }
-
-    /// Called when the NIB is loaded. Wires up menu actions and eagerly loads
-    /// dictionary data and singletons if dictionary suggestions are enabled.
-    override func awakeFromNib() {
-        let preferencesItem = menu.item(withTag: 1)
-        preferencesItem?.action = #selector(showPreferences(_:))
-
-        if UserDefaults.standard.bool(forKey: "IncludeDictionary") {
-            print("Loading Dictionary...")
-            let _ = Database.shared
-            let _ = RegexParser.shared
-            let _ = CacheManager.shared
-        }
-        let _ = AutoCorrect.shared
     }
 }
