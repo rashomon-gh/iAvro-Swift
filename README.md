@@ -17,7 +17,7 @@ A Swift rewrite of [iAvro](https://github.com/torifat/iAvro).
 
 ```bash
 brew tap rashomon-gh/tap
-brew install --cask --no-quarantine avro-keyboard
+brew install --cask avro-keyboard
 ```
 
 After installing, add Avro Keyboard from:
