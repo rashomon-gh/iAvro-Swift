@@ -25,7 +25,6 @@ jobs:
           STAGING="Avro-Keyboard-Release"
           mkdir -p "$STAGING"
           cp -R "$APP_PATH" "$STAGING/"
-          cp install.scpt "$STAGING/"
           zip -r "Avro-Keyboard-${GITHUB_REF_NAME}.zip" "$STAGING"
 
       - name: Release
