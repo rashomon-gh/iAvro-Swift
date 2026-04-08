@@ -156,6 +156,6 @@ Potential improvements:
 
 ## Resources
 
-- **Original Objective-C version**: `/Users/shawon/Projects/iAvro`
+- **Original Objective-C version**: `$HOME/Projects/iAvro`
 - **Working installation**: `/Library/Input Methods/Avro Keyboard.app`
-- **Build output**: `/Users/shawon/Library/Developer/Xcode/DerivedData/iAvro-Swift-*/Build/Products/Release/`
+- **Build output**: `$HOME/Library/Developer/Xcode/DerivedData/iAvro-Swift-*/Build/Products/Release/`
