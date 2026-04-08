@@ -19,12 +19,26 @@ jobs:
             -derivedDataPath build \
             clean build
 
+      - name: Verify Build
+        run: |
+          APP_PATH="build/Build/Products/Release/Avro Keyboard.app"
+          if [ ! -d "$APP_PATH" ]; then
+            echo "❌ Build failed: App not found at $APP_PATH"
+            exit 1
+          fi
+          echo "✅ Build verified: App found at $APP_PATH"
+
       - name: Package
         run: |
           APP_PATH="build/Build/Products/Release/Avro Keyboard.app"
           STAGING="Avro-Keyboard-Release"
           mkdir -p "$STAGING"
           cp -R "$APP_PATH" "$STAGING/"
+
+          # Verify bundle identifier
+          BUNDLE_ID=$(plutil -p "$STAGING/Avro Keyboard.app/Contents/Info.plist" | grep CFBundleIdentifier | awk -F'=> ' '{print $2}' | tr -d '"')
+          echo "📦 Bundle identifier: $BUNDLE_ID"
+
           zip -r "Avro-Keyboard-${GITHUB_REF_NAME}.zip" "$STAGING"
 
       - name: Release
