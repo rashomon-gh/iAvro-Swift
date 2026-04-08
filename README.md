@@ -30,17 +30,37 @@ After installing, add Avro Keyboard from:
 ### Build
 
 ```bash
-xcodebuild -project iAvro-Swift.xcodeproj -scheme "iAvro-Swift" -configuration Debug build
+xcodebuild -project iAvro-Swift.xcodeproj -scheme "iAvro-Swift" -configuration Release build
 ```
 
 Or open `iAvro-Swift.xcodeproj` in Xcode and press Cmd+B.
 
+**Note**: Use `Release` configuration for production builds. The `Debug` configuration works but may have different performance characteristics.
+
 ### Install as Input Method
 
-1. Build the project
-2. Copy the build binary from `~/Library/Developer/Xcode/DerivedData/`. 
-Apparently Xcode stores binaries with a hash for each build.
-3. Go to **System Settings → Keyboard → Input Sources → Edit → +** and add **Avro Keyboard** from the Bangla section.
+1. Build the project in Release configuration
+2. Copy the built app to the Input Methods directory:
+
+```bash
+sudo cp -R ~/Library/Developer/Xcode/DerivedData/iAvro-Swift-*/Build/Products/Release/Avro\ Keyboard.app /Library/Input\ Methods/
+```
+
+3. **Log out of your user account completely**
+4. **Log back in** (this is required for macOS to register the input method)
+5. Go to **System Settings → Keyboard → Input Sources → Edit → +** and add **Avro Keyboard** from the Bangla section
+
+**Finding the built app**: Xcode stores build outputs in a hashed directory. The path above uses a wildcard to match it. You can also find the exact path by running:
+
+```bash
+xcodebuild -project iAvro-Swift.xcodeproj -scheme "iAvro-Swift" -showBuildSettings | grep BUILT_PRODUCTS_DIR
+```
+
+**Finding the built app**: Xcode stores build outputs in a hashed directory. The path above uses a wildcard to match it. You can also find the exact path by running:
+
+```bash
+xcodebuild -project iAvro-Swift.xcodeproj -scheme "iAvro-Swift" -showBuildSettings | grep BUILT_PRODUCTS_DIR
+```
 
 
 

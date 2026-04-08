@@ -8,17 +8,60 @@ import InputMethodKit
 @objc(MainMenuAppDelegate)
 class MainMenuAppDelegate: NSObject, NSApplicationDelegate {
 
-    /// The preferences manager instance, set at startup from `main.swift`.
+    /// The preferences manager instance.
     @objc var imPref: IMPreferences?
 
     /// The status bar menu shown when the input method icon is clicked.
     @objc let menu = NSMenu()
 
-    /// Creates and configures the menu with a Preferences item.
+    /// Sets up the application menu programmatically (no NIB file).
     @objc func setupMenu() {
-        let preferencesItem = NSMenuItem(title: "Preferences...", action: #selector(showPreferences(_:)), keyEquivalent: ",")
+        print("iAvro: Setting up menu...")
+
+        // Create Preferences menu item
+        let preferencesItem = NSMenuItem()
+        preferencesItem.title = "Preferences..."
         preferencesItem.tag = 1
+        preferencesItem.action = #selector(showPreferences(_:))
+        preferencesItem.target = self
         menu.addItem(preferencesItem)
+
+        print("iAvro: ✅ Menu setup complete")
+    }
+
+    /// Called when the NIB is loaded. Wires up menu actions and eagerly loads
+    /// dictionary data and singletons if dictionary suggestions are enabled.
+    @objc override func awakeFromNib() {
+        print("iAvro: awakeFromNib called (should not happen in pure Swift version)")
+
+        let preferencesItem = menu.item(withTag: 1)
+        preferencesItem?.action = #selector(showPreferences(_:))
+
+        if UserDefaults.standard.bool(forKey: "IncludeDictionary") {
+            print("iAvro: Loading Dictionary...")
+            let _ = Database.shared
+            let _ = RegexParser.shared
+            let _ = CacheManager.shared
+        }
+        let _ = AutoCorrect.shared
+
+        print("iAvro: ✅ Awake from nib complete")
+    }
+
+    /// Called when the app finishes launching.
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        print("iAvro: applicationDidFinishLaunching called")
+
+        // Load dictionary data if needed
+        if UserDefaults.standard.bool(forKey: "IncludeDictionary") {
+            print("iAvro: Loading Dictionary...")
+            let _ = Database.shared
+            let _ = RegexParser.shared
+            let _ = CacheManager.shared
+        }
+        let _ = AutoCorrect.shared
+
+        print("iAvro: ✅ App launch complete")
     }
 
     /// Opens the preferences window.
@@ -31,24 +74,9 @@ class MainMenuAppDelegate: NSObject, NSApplicationDelegate {
     }
 
     /// Persists the suggestion cache to disk before the application terminates.
-    @objc func applicationWillTerminate(_ notification: Notification) {
+    func applicationWillTerminate(_ notification: Notification) {
         if UserDefaults.standard.bool(forKey: "IncludeDictionary") {
             CacheManager.shared.persist()
         }
-    }
-
-    /// Called when the NIB is loaded. Wires up menu actions and eagerly loads
-    /// dictionary data and singletons if dictionary suggestions are enabled.
-    override func awakeFromNib() {
-        let preferencesItem = menu.item(withTag: 1)
-        preferencesItem?.action = #selector(showPreferences(_:))
-
-        if UserDefaults.standard.bool(forKey: "IncludeDictionary") {
-            print("Loading Dictionary...")
-            let _ = Database.shared
-            let _ = RegexParser.shared
-            let _ = CacheManager.shared
-        }
-        let _ = AutoCorrect.shared
     }
 }

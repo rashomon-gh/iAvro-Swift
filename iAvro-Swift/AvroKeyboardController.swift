@@ -40,7 +40,7 @@ class AvroKeyboardController: IMKInputController {
 
     // MARK: - Initialization
 
-    override init!(server: IMKServer!, delegate: Any!, client inputClient: Any!) {
+    @objc public override init!(server: IMKServer!, delegate: Any!, client inputClient: Any!) {
         super.init(server: server, delegate: delegate, client: inputClient)
         currentClient = inputClient as AnyObject?
     }
@@ -118,12 +118,12 @@ class AvroKeyboardController: IMKInputController {
                 Candidates.reallocate()
             }
             Candidates.shared.update()
-            Candidates.shared.show(1)
+            Candidates.shared.show(kIMKLocateCandidatesBelowHint)
             if prevSelected > -1 {
                 for _ in 0..<prevSelected {
-                    if Candidates.shared.panelType() == 1 {
+                    if Candidates.shared.panelType() == kIMKSingleColumnScrollingCandidatePanel {
                         Candidates.shared.moveDown(self)
-                    } else if Candidates.shared.panelType() == 2 {
+                    } else if Candidates.shared.panelType() == kIMKSingleRowSteppingCandidatePanel {
                         Candidates.shared.moveRight(self)
                     }
                 }

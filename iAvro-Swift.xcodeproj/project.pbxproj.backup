@@ -471,7 +471,7 @@
 				<key>OTHER_LDFLAGS</key>
 				<string>-lsqlite3</string>
 				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
-				<string>com.omicronlab.inputmethod.AvroKeyboard</string>
+				<string>org.shawonashraf.iAvro-Swift</string>
 				<key>PRODUCT_NAME</key>
 				<string>Avro Keyboard</string>
 				<key>PROVISIONING_PROFILE_SPECIFIER</key>
@@ -528,7 +528,7 @@
 				<key>OTHER_LDFLAGS</key>
 				<string>-lsqlite3</string>
 				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
-				<string>com.omicronlab.inputmethod.AvroKeyboard</string>
+				<string>org.shawonashraf.iAvro-Swift</string>
 				<key>PRODUCT_NAME</key>
 				<string>Avro Keyboard</string>
 				<key>PROVISIONING_PROFILE_SPECIFIER</key>
