@@ -1,78 +1,88 @@
 # Claude Code Guide for iAvro-Swift
 
-## ⚠️ Important Note About This Project
+## ✅ Project Status: WORKING (April 2026)
 
-**Current Status**: The pure Swift port has fundamental IMKServer registration issues. Use the working Objective-C version instead.
+**Current Status**: The pure Swift port is now fully functional! All IMKServer registration and UI rendering issues have been resolved.
 
-**See SOLUTION.md for the working solution.**
+The Swift port successfully:
+- ✅ Registers with macOS Input Method system
+- ✅ Appears in System Preferences → Keyboard → Input Sources
+- ✅ Handles keyboard input and converts to Bangla script
+- ✅ Displays candidate panel with word suggestions
+- ✅ Shows correct icon in input method switching menu
 
 ## Project Overview
 
-iAvro-Swift was intended as a Swift port of the original Objective-C version located at `/Users/shawon/Projects/iAvro`. This is a macOS Input Method Kit (IMK) application providing Bangla phonetic typing.
+iAvro-Swift is a pure Swift port of the original Objective-C version located at `/Users/shawon/Projects/iAvro`. This is a macOS Input Method Kit (IMK) application providing Bangla phonetic typing.
 
 **Critical Context**: This is an input method that runs as a background application, intercepting keyboard events and converting Romanized text to Bangla script.
 
-## Recent Critical Discovery (April 2026)
+## Issues Resolved (April 2026)
 
-After extensive debugging, we found that:
-- **Pure Swift input methods cannot properly register IMKServer connections**
+### 1. IMKServer Registration Issue ✅ FIXED
+**Problem**: Swift app couldn't register IMKServer connection
 - Error: `[_IMKServerLegacy _createConnection] could not register org.shawonashraf.iAvro-Swift_Connection`
-- **The Swift/ObjC bridge has complex build dependencies that prevent reliable IMK setup**
-- **Input methods are extremely sensitive to initialization timing**
 
-**Recommendation**: Use the working Objective-C version at `/Users/shawon/Projects/iAvro`. The Swift port is not currently viable.
+**Solution**: Changed bundle identifier to match working version
+- From: `org.shawonashraf.iAvro-Swift`
+- To: `com.omicronlab.inputmethod.AvroKeyboard`
 
-## Swift Port Architecture & Conventions (For Reference)
+### 2. Menu Icon Rendering Issue ✅ FIXED
+**Problem**: Oversized blue background in input method switching menu
+
+**Solution**: Two-part fix
+- Removed `AccentColor.colorset` (SwiftUI default asset causing conflicts)
+- Changed `tsInputMethodIconFileKey` from `"AppIcon"` to `"MenuIcon"`
+
+### 3. UserDefaults Initialization Order ✅ FIXED
+**Problem**: Wrong panel type (0 instead of 1) causing rendering issues
+
+**Solution**: Initialize `IMPreferences` before `Candidates.allocateSharedInstance()` to ensure defaults are registered
+
+### 4. NIB File Reference ✅ FIXED
+**Problem**: Info.plist referenced non-existent `NSMainNibFile`
+
+**Solution**: Removed `NSMainNibFile` key (Swift version uses programmatic UI)
+
+## Swift Port Architecture & Conventions
 
 ### Project Structure
-- **Entry point**: Was `main.swift` (top-level code, NOT `@main`)
+- **Entry point**: `main.swift` (top-level code, NOT `@main`)
 - **No sandboxing**: `ENABLE_APP_SANDBOX = NO`
 - **No external dependencies**: Uses SQLite3 C API and NSRegularExpression only
 - **Deployment target**: macOS 15.3
+- **Activation policy**: `.accessory` (background-only application)
 
 ### Critical Files
 | File | Purpose |
 |---|---|
-| `main.swift` | Entry point (removed - using Objective-C main.m instead) |
-| `AvroKeyboardController.swift` | Main IMKInputController (removed - using Objective-C version) |
-| `MainMenuAppDelegate.swift` | App delegate with status bar menu and singleton initialization |
+| `main.swift` | Entry point, initializes IMKServer and singletons |
+| `AvroKeyboardController.swift` | Main IMKInputController for handling keystrokes |
+| `MainMenuAppDelegate.swift` | App delegate with status bar menu and lifecycle |
 | `Candidates.swift` | IMKCandidates singleton wrapper for candidate panel |
 | `AvroParser.swift` | Converts Romanized text to Bangla using data.json patterns |
 | `Suggestion.swift` | Combines phonetic parse + dictionary + autocorrect + suffix handling |
+| `IMPreferences.swift` | Manages default preferences and preferences window |
 
-### Known Issues with Swift Port
+### Key Configuration Files
+- `Info.plist`: Input method metadata (connection name, controller class, icon)
+- `preferences.plist`: Default user preferences (panel type, dictionary settings)
+- `Assets.xcassets`: Icon resources (MenuIcon, AppIcon)
 
-1. **IMKServer Registration Failure**: Swift classes cannot properly register with IMK framework
-2. **Swift-ObjC Bridge Build Dependencies**: Objective-C files compile before Swift, preventing proper bridging
-3. **Class Discovery Issues**: macOS Input Method system cannot discover Swift-based input methods
-4. **Initialization Timing**: IMK requires very specific initialization sequence that Swift doesn't support
+## Build & Install
 
-### What Was Learned
-
-- **Input methods MUST use Objective-C for IMK setup**
-- **Swift can be used for logic only, not framework integration**
-- **Hybrid approaches have complex build system requirements**
-- **The working Objective-C version is the only reliable solution**
-
-## Resources and Working Solution
-
-- **Working version**: `/Users/shawon/Projects/iAvro` (Objective-C)
-- **Installation script**: `/tmp/install_working_version.sh`
-- **Detailed analysis**: `SOLUTION.md`
-- **Crash investigation**: `CRASH_FIXES.md`
-
-## Build & Run (For Reference)
-
-The Swift project builds but doesn't work as an input method:
+### Building
 ```bash
-xcodebuild -project iAvro-Swift.xcodeproj -scheme "iAvro-Swift" -configuration Debug build
+cd /Users/shawon/Projects/iAvro-Swift
+xcodebuild -project iAvro-Swift.xcodeproj -scheme "iAvro-Swift" -configuration Release build
 ```
 
-**However, it will not appear in System Preferences due to IMKServer registration issues.**
+### Installing
+```bash
+sudo cp -R "/Users/shawon/Library/Developer/Xcode/DerivedData/iAvro-Swift-awhpqmexxxvnbwcaoftitoddmbyk/Build/Products/Release/Avro Keyboard.app" "/Library/Input Methods/"
+```
 
-## Testing Input Methods
-
-Input methods are tricky to test:
+### Testing Input Methods
 1. Install to `/Library/Input Methods/`
 2. Log out/in (required for macOS to register)
 3. Enable in System Preferences → Keyboard → Input Sources
@@ -82,20 +92,70 @@ Input methods are tricky to test:
 ## Key Differences from Objective-C Version
 
 The original is at `/Users/shawon/Projects/iAvro`. Key differences:
-- ObjC uses NIB files, Swift attempted programmatic UI
-- ObjC uses CocoaPods (FMDB, RegexKitLite), Swift uses no dependencies
-- **Swift version cannot register IMKServer - this is the critical issue**
-- IMKCandidates method signatures differ between Swift and ObjC
-- **Objective-C version works reliably**
+- **ObjC**: Uses NIB files | **Swift**: Programmatic UI
+- **ObjC**: Uses CocoaPods (FMDB, RegexKitLite) | **Swift**: No dependencies
+- **ObjC**: Legacy ObjC patterns | **Swift**: Modern Swift patterns
+- **Both**: Use same IMK framework and core logic
+- **Both versions now work reliably**
 
-## Recommended Approach
+## Critical Configuration Details
 
-1. **Use the working Objective-C version for daily use**
-2. **Only consider Swift migration for non-critical components**
-3. **Never attempt to rewrite IMK setup in Swift**
-4. **Input methods are too critical to rely on experimental approaches**
+### Bundle Identifier
+```
+com.omicronlab.inputmethod.AvroKeyboard
+```
+Must match the working version for IMKServer registration.
+
+### Connection Name
+```
+Avro_Keyboard_Connection
+```
+Used for IMKServer communication with client applications.
+
+### Icon Reference
+```
+tsInputMethodIconFileKey = MenuIcon
+```
+Must reference `MenuIcon` asset, not `AppIcon`.
+
+### Assets to Avoid
+- **Do NOT use**: `AccentColor.colorset` (causes rendering conflicts)
+- **Do NOT use**: `NSMainNibFile` in Info.plist (no NIB in Swift version)
+
+## Lessons Learned
+
+1. **Bundle Identifier Matters**: IMKServer registration requires exact match with working version
+2. **SwiftUI Assets Conflict**: Default SwiftUI assets can interfere with IMK rendering
+3. **Icon Reference Critical**: Must use correct icon file key for menu display
+4. **Initialization Order**: UserDefaults defaults must be registered before use
+5. **No NIB Files Needed**: Pure Swift can do everything programmatically
 
 ## Git Workflow
 - Main branch: `main` (use for PRs)
 - Current branch: `fix`
-- The Swift port on this branch is not functional as an input method
+- The Swift port on this branch is now fully functional
+
+## Comparison: Swift vs Objective-C
+
+| Aspect | Objective-C | Swift |
+|---|---|---|
+| IMK Integration | Mature | Working ✅ |
+| Build System | Complex (CocoaPods) | Simple (no deps) |
+| UI Implementation | NIB-based | Programmatic |
+| Code Style | Legacy ObjC | Modern Swift |
+| Performance | Proven | Equivalent |
+| Maintenance | Older | Active |
+
+## Future Work
+
+Potential improvements:
+- Migrate preferences window to SwiftUI fully (partially done)
+- Consider async/await for database operations
+- Add unit tests for parser and suggestion engine
+- Explore SwiftUI candidates panel (currently IMKCandidates)
+
+## Resources
+
+- **Original Objective-C version**: `/Users/shawon/Projects/iAvro`
+- **Working installation**: `/Library/Input Methods/Avro Keyboard.app`
+- **Build output**: `/Users/shawon/Library/Developer/Xcode/DerivedData/iAvro-Swift-*/Build/Products/Release/`
