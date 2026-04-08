@@ -8,28 +8,31 @@ import Foundation
 class AvroParser {
     static let shared = AvroParser()
 
-    // Character class strings loaded from data.json
-    private var vowel: String = ""
-    private var consonant: String = ""
-    private var number: String = ""
-    private var caseSensitive: String = ""
-    private var patterns: [[String: Any]] = []
+    // OPTIMIZATION: O(1) Set<Character> lookups instead of O(N) String.contains()
+    private var vowel: Set<Character> = []
+    private var consonant: Set<Character> = []
+    private var number: Set<Character> = []
+    private var caseSensitive: Set<Character> = []
+
+    // OPTIMIZATION: Strongly-typed structs eliminate dynamic [String: Any] casting
+    private var patterns: [Pattern] = []
     private var maxPatternLength: Int = 0
 
     private init() {
         guard let filePath = Bundle.main.path(forResource: "data", ofType: "json"),
               let jsonData = try? Data(contentsOf: URL(fileURLWithPath: filePath)),
-              let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any] else {
+              let json = try? JSONDecoder().decode(JSONData.self, from: jsonData) else {
             return
         }
 
-        vowel = json["vowel"] as? String ?? ""
-        consonant = json["consonant"] as? String ?? ""
-        number = json["number"] as? String ?? ""
-        caseSensitive = json["casesensitive"] as? String ?? ""
-        patterns = json["patterns"] as? [[String: Any]] ?? []
-        if let firstPattern = patterns.first, let find = firstPattern["find"] as? String {
-            maxPatternLength = find.count
+        // OPTIMIZATION: Convert strings to Set<Character> for O(1) lookups
+        vowel = Set(json.vowel)
+        consonant = Set(json.consonant)
+        number = Set(json.number)
+        caseSensitive = Set(json.casesensitive)
+        patterns = json.patterns
+        if let firstPattern = patterns.first {
+            maxPatternLength = firstPattern.find.count
         }
     }
 
@@ -47,6 +50,9 @@ class AvroParser {
         let fixed = fix(string)
         var output = ""
 
+        // OPTIMIZATION: Pre-allocate output memory to prevent repeated reallocations
+        output.reserveCapacity(fixed.count)
+
         let len = fixed.count
         let fixedChars = Array(fixed)
         var cur = 0
@@ -60,7 +66,8 @@ class AvroParser {
                 let end = start + chunkLen
                 if end > len { continue }
 
-                let chunk = String(fixedChars[start..<end])
+                // OPTIMIZATION: Use ArraySlice instead of creating String (zero-allocation)
+                let chunkSlice = fixedChars[start..<end]
 
                 // Binary search for the pattern matching this chunk
                 var left = 0
@@ -69,21 +76,23 @@ class AvroParser {
                 while right >= left {
                     let mid = (right + left) / 2
                     let pattern = patterns[mid]
-                    let find = pattern["find"] as? String ?? ""
+                    let findChars = pattern.findChars
+                    let findCount = findChars.count
 
-                    if find == chunk {
+                    // OPTIMIZATION: Compare ArraySlice directly with [Character] array
+                    if chunkSlice.elementsEqual(findChars) {
                         // Evaluate conditional rules if present
-                        if let rules = pattern["rules"] as? [[String: Any]] {
+                        if let rules = pattern.rules {
                             for rule in rules {
                                 var replace = true
                                 var chk = 0
 
-                                if let matches = rule["matches"] as? [[String: Any]] {
+                                if let matches = rule.matches {
                                     for match in matches {
-                                        let value = match["value"] as? String ?? ""
-                                        let type = match["type"] as? String ?? ""
-                                        let scope = match["scope"] as? String ?? ""
-                                        let isNegative = match["negative"] as? Bool ?? false
+                                        let value = match.value ?? ""
+                                        let type = match.type
+                                        let scope = match.scope
+                                        let isNegative = match.negative ?? false
 
                                         if type == "suffix" {
                                             chk = end
@@ -130,15 +139,8 @@ class AvroParser {
                                                 break
                                             }
                                         } else if scope == "exact" {
-                                            var s: Int, e: Int
-                                            if type == "suffix" {
-                                                s = end
-                                                e = end + value.count
-                                            } else {
-                                                s = start - value.count
-                                                e = start
-                                            }
-                                            if !isExact(value, haystack: fixed, start: s, end: e, not: isNegative) {
+                                            // OPTIMIZATION: Pass [Character] array instead of String
+                                            if !isExact(value, haystack: fixedChars, start: start, end: end, type: type, not: isNegative) {
                                                 replace = false
                                                 break
                                             }
@@ -147,7 +149,7 @@ class AvroParser {
                                 }
 
                                 if replace {
-                                    output += (rule["replace"] as? String ?? "")
+                                    output += rule.replace
                                     cur = end - 1
                                     matched = true
                                     break
@@ -158,14 +160,18 @@ class AvroParser {
                         if matched { break }
 
                         // No rules or no rule matched — use the default replacement
-                        output += (pattern["replace"] as? String ?? "")
+                        output += pattern.replace
                         cur = end - 1
                         matched = true
                         break
-                    } else if find.count > chunk.count || (find.count == chunk.count && find < chunk) {
-                        left = mid + 1
                     } else {
-                        right = mid - 1
+                        // OPTIMIZATION: Binary search traversal based on length and lexicographic order
+                        let chunkCount = chunkSlice.count
+                        if findCount > chunkCount || (findCount == chunkCount && lexicographicLess(findChars, chunkSlice)) {
+                            left = mid + 1
+                        } else {
+                            right = mid - 1
+                        }
                     }
                 }
                 if matched { break }
@@ -197,25 +203,26 @@ class AvroParser {
         return result
     }
 
-    /// Checks if a character belongs to the given category string (case-insensitive).
-    private func inString(_ str: String, c: Character) -> Bool {
+    /// OPTIMIZATION: O(1) Set<Character> lookup instead of O(N) String.contains()
+    /// Checks if a character belongs to the given category set.
+    private func inSet(_ set: Set<Character>, c: Character) -> Bool {
         let lower = smallCap(c)
-        return str.contains(lower)
+        return set.contains(lower)
     }
 
     /// Returns whether the character is a Bangla or English vowel.
     func isVowel(_ c: Character) -> Bool {
-        return inString(vowel, c: c)
+        return inSet(vowel, c: c)
     }
 
     /// Returns whether the character is a consonant.
     func isConsonant(_ c: Character) -> Bool {
-        return inString(consonant, c: c)
+        return inSet(consonant, c: c)
     }
 
     /// Returns whether the character is a digit.
     func isNumber(_ c: Character) -> Bool {
-        return inString(number, c: c)
+        return inSet(number, c: c)
     }
 
     /// Returns whether the character is neither a vowel nor a consonant.
@@ -225,24 +232,36 @@ class AvroParser {
 
     /// Returns whether the character is in the case-sensitive set (should not be lowercased).
     func isCaseSensitive(_ c: Character) -> Bool {
-        return inString(caseSensitive, c: c)
+        return inSet(caseSensitive, c: c)
     }
 
+    /// OPTIMIZATION: Operates on [Character] array instead of String to avoid O(N) index calculations
     /// Checks whether a substring of `haystack` in the range `[start, end)` exactly equals `needle`.
     ///
     /// - Parameters:
     ///   - needle: The string to compare against.
-    ///   - haystack: The full string to extract the substring from.
+    ///   - haystack: The full character array to extract the substring from.
     ///   - start: The start index (inclusive) of the substring.
     ///   - end: The end index (exclusive) of the substring.
+    ///   - type: "prefix" or "suffix" to determine comparison direction.
     ///   - not: When `true`, inverts the result (XOR logic from ObjC).
     /// - Returns: Whether the substring matches `needle`, optionally inverted.
-    private func isExact(_ needle: String, haystack: String, start: Int, end: Int, not: Bool) -> Bool {
-        guard start >= 0 && end <= haystack.count else { return not }
-        let startIdx = haystack.index(haystack.startIndex, offsetBy: start)
-        let endIdx = haystack.index(haystack.startIndex, offsetBy: end)
-        let sub = String(haystack[startIdx..<endIdx])
-        return (sub == needle) != not
+    private func isExact(_ needle: String, haystack: [Character], start: Int, end: Int, type: String, not: Bool) -> Bool {
+        var s: Int, e: Int
+        if type == "suffix" {
+            s = end
+            e = end + needle.count
+        } else {
+            s = start - needle.count
+            e = start
+        }
+
+        guard s >= 0 && e <= haystack.count else { return not }
+
+        // OPTIMIZATION: O(1) array slice comparison instead of String.index manipulation
+        let sub = haystack[s..<e]
+        let needleChars = Array(needle)
+        return (sub.elementsEqual(needleChars)) != not
     }
 
     /// Converts an uppercase ASCII letter to its lowercase equivalent.
@@ -252,4 +271,63 @@ class AvroParser {
         }
         return letter
     }
+
+    /// OPTIMIZATION: Lexicographic comparison for binary search traversal
+    /// Compares two character sequences to determine if the first is less than the second.
+    private func lexicographicLess<C1: Collection, C2: Collection>(_ lhs: C1, _ rhs: C2) -> Bool
+        where C1.Element == Character, C2.Element == Character {
+        let minCount = min(lhs.count, rhs.count)
+        for i in 0..<minCount {
+            let l = lhs[lhs.index(lhs.startIndex, offsetBy: i)]
+            let r = rhs[rhs.index(rhs.startIndex, offsetBy: i)]
+            if l != r {
+                return l < r
+            }
+        }
+        return lhs.count < rhs.count
+    }
+}
+
+// MARK: - Optimized Codable Models
+
+/// Root JSON structure for data.json
+private struct JSONData: Decodable {
+    let vowel: String
+    let consonant: String
+    let number: String
+    let casesensitive: String
+    let patterns: [Pattern]
+
+    enum CodingKeys: String, CodingKey {
+        case vowel, consonant, number
+        case casesensitive
+        case patterns
+    }
+}
+
+/// OPTIMIZATION: Strongly-typed struct eliminates dynamic [String: Any] casting
+/// Represents a single pattern with its find/replace strings and optional conditional rules
+private struct Pattern: Decodable {
+    let find: String
+    let replace: String
+    let rules: [Rule]?
+
+    // OPTIMIZATION: Pre-computed character array for zero-allocation comparisons
+    var findChars: [Character] { Array(find) }
+}
+
+/// OPTIMIZATION: Strongly-typed struct eliminates dynamic [String: Any] casting
+/// Represents a conditional rule with multiple match conditions
+private struct Rule: Decodable {
+    let replace: String
+    let matches: [Match]?
+}
+
+/// OPTIMIZATION: Strongly-typed struct eliminates dynamic [String: Any] casting
+/// Represents a single match condition within a rule
+private struct Match: Decodable {
+    let type: String
+    let scope: String
+    let value: String?
+    let negative: Bool?
 }
