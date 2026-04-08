@@ -14,6 +14,10 @@ print("iAvro: Starting initialization...")
 let app = NSApplication.shared
 print("iAvro: NSApplication initialized")
 
+// Input methods should not show dock icon or windows
+app.setActivationPolicy(.accessory)
+print("iAvro: Set activation policy to accessory (background mode)")
+
 // Get bundle identifier FIRST, before anything else
 guard let identifier = Bundle.main.bundleIdentifier else {
     fatalError("No bundle identifier found")
@@ -40,6 +44,12 @@ if let tempServer = IMKServer(name: kConnectionName, bundleIdentifier: identifie
 
 print("iAvro: ✅ IMKServer creation complete")
 
+// Initialize preferences BEFORE creating candidates panel
+// This ensures defaults (like CandidatePanelType=1) are registered
+print("iAvro: Initializing preferences...")
+let _ = IMPreferences()
+print("iAvro: ✅ Preferences initialized")
+
 // Setup the shared candidates panel
 print("iAvro: Setting up Candidates...")
 Candidates.allocateSharedInstance(with: server)
@@ -57,6 +67,13 @@ print("iAvro: App delegate set")
 print("iAvro: Configuring app delegate...")
 appDelegate.setupMenu()
 print("iAvro: App delegate configured")
+
+// Input methods should not create any windows at startup
+// Ensure all windows are hidden
+for window in NSApp.windows {
+    window.setIsVisible(false)
+}
+print("iAvro: All startup windows hidden")
 
 // Run the application
 print("iAvro: ✅ Starting NSApplication.run()...")

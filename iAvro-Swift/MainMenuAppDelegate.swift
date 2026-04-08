@@ -32,7 +32,7 @@ class MainMenuAppDelegate: NSObject, NSApplicationDelegate {
     /// Called when the NIB is loaded. Wires up menu actions and eagerly loads
     /// dictionary data and singletons if dictionary suggestions are enabled.
     @objc override func awakeFromNib() {
-        print("iAvro: awakeFromNib called")
+        print("iAvro: awakeFromNib called (should not happen in pure Swift version)")
 
         let preferencesItem = menu.item(withTag: 1)
         preferencesItem?.action = #selector(showPreferences(_:))
@@ -46,6 +46,22 @@ class MainMenuAppDelegate: NSObject, NSApplicationDelegate {
         let _ = AutoCorrect.shared
 
         print("iAvro: ✅ Awake from nib complete")
+    }
+
+    /// Called when the app finishes launching.
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        print("iAvro: applicationDidFinishLaunching called")
+
+        // Load dictionary data if needed
+        if UserDefaults.standard.bool(forKey: "IncludeDictionary") {
+            print("iAvro: Loading Dictionary...")
+            let _ = Database.shared
+            let _ = RegexParser.shared
+            let _ = CacheManager.shared
+        }
+        let _ = AutoCorrect.shared
+
+        print("iAvro: ✅ App launch complete")
     }
 
     /// Opens the preferences window.
