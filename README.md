@@ -11,19 +11,6 @@ A Swift rewrite of [iAvro](https://github.com/torifat/iAvro).
 - macOS 15.3+
 - Xcode 16+ (for local development)
 
-## Installation
-
-### Homebrew
-
-```bash
-brew tap rashomon-gh/tap
-brew install --cask avro-keyboard
-```
-
-After installing, **make sure to log out and then log in.** Afterwards, add Avro Keyboard from:
-
-**System Settings → Keyboard → Input Sources → Edit → +** and add **Avro Keyboard** from the Bangla section.
-
 
 ## Local Development
 
